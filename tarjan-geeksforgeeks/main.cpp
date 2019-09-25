@@ -1,8 +1,11 @@
 // A C++ program to find strongly connected components in a given 
 // directed graph using Tarjan's algorithm (single DFS) 
-#include<iostream> 
+#include <iostream> 
 #include <list> 
-#include <stack> 
+#include <stack>
+#include <chrono>
+#include <fstream>
+
 #define NIL -1 
 using namespace std; 
 
@@ -16,7 +19,8 @@ class Graph
 	void SCCUtil(int u, int disc[], int low[], 
 				stack<int> *st, bool stackMember[]); 
 public: 
-	Graph(int V); // Constructor 
+	Graph(int V); // Constructor
+	~Graph(); // Desstructor 
 	void addEdge(int v, int w); // function to add an edge to graph 
 	void SCC(); // prints strongly connected components 
 }; 
@@ -25,6 +29,11 @@ Graph::Graph(int V)
 { 
 	this->V = V; 
 	adj = new list<int>[V]; 
+} 
+
+Graph::~Graph() 
+{ 
+	delete [] adj;
 } 
 
 void Graph::addEdge(int v, int w) 
@@ -86,12 +95,12 @@ void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
 		while (st->top() != u) 
 		{ 
 			w = (int) st->top(); 
-			cout << w << " "; 
+			// cout << w << " "; 
 			stackMember[w] = false; 
 			st->pop(); 
 		} 
 		w = (int) st->top(); 
-		cout << w << "\n"; 
+		// cout << w << "\n"; 
 		stackMember[w] = false; 
 		st->pop(); 
 	} 
@@ -118,62 +127,95 @@ void Graph::SCC()
 	for (int i = 0; i < V; i++) 
 		if (disc[i] == NIL) 
 			SCCUtil(i, disc, low, st, stackMember); 
-} 
+}
+
+// Gera numeros aleatorios
+double doubleRand() {
+    return double(rand()) / (double(RAND_MAX) + 1.0);
+}
 
 // Driver program to test above function 
 int main() 
 { 
-	cout << "\nSCCs in first graph \n"; 
-	Graph g1(5); 
-	g1.addEdge(1, 0); 
-	g1.addEdge(0, 2); 
-	g1.addEdge(2, 1); 
-	g1.addEdge(0, 3); 
-	g1.addEdge(3, 4); 
-	g1.SCC(); 
+	 // seed dos valores random
+    srand(static_cast<unsigned int>(clock()));
+    // Contador de arestas
+    long long edges_counter = 0;
+    
+    // Quantidade de possibilidades de vertices
+    int n_running_times = (int)atoi(getenv("RUNNING_TIMES"));
+    int n_possible_vertices = (int)atoi(getenv("VERTICES_RANGE"));
+    double edges_max_p = (double)atof(getenv("EDGES_MAX_PROB"));
 
-	cout << "\nSCCs in second graph \n"; 
-	Graph g2(4); 
-	g2.addEdge(0, 1); 
-	g2.addEdge(1, 2); 
-	g2.addEdge(2, 3); 
-	g2.SCC(); 
+    cout << "RUNNING_TIMES: " << n_running_times << endl;
+    cout << "VERTICES_RANGE: " << n_possible_vertices << endl;
+    cout << "EDGES_MAX_PROB: " << edges_max_p << endl;
+    
+    // Vetor com as possibilidades de valores de vertices -> 10e1...10e10
+    int vertices[n_possible_vertices];
+    for (int i = 0; i < n_possible_vertices; ++i) {
+        // vertices[i] = pow(10, i+1);
+        vertices[i] = 10 * (i+1)*100;
+    }
 
-	cout << "\nSCCs in third graph \n"; 
-	Graph g3(7); 
-	g3.addEdge(0, 1); 
-	g3.addEdge(1, 2); 
-	g3.addEdge(2, 0); 
-	g3.addEdge(1, 3); 
-	g3.addEdge(1, 4); 
-	g3.addEdge(1, 6); 
-	g3.addEdge(3, 5); 
-	g3.addEdge(4, 5); 
-	g3.SCC(); 
+    // for (int i = 0; i < n_possible_vertices; ++i){
+    //     cout << vertices[i] << endl;
+    // }
+    // return(0);
+    
+    // Arquivo de escrita
+    char file_name[50];
 
-	cout << "\nSCCs in fourth graph \n"; 
-	Graph g4(11); 
-	g4.addEdge(0,1);g4.addEdge(0,3); 
-	g4.addEdge(1,2);g4.addEdge(1,4); 
-	g4.addEdge(2,0);g4.addEdge(2,6); 
-	g4.addEdge(3,2); 
-	g4.addEdge(4,5);g4.addEdge(4,6); 
-	g4.addEdge(5,6);g4.addEdge(5,7);g4.addEdge(5,8);g4.addEdge(5,9); 
-	g4.addEdge(6,4); 
-	g4.addEdge(7,9); 
-	g4.addEdge(8,9); 
-	g4.addEdge(9,8); 
-	g4.SCC(); 
+    for (int x = 1; x <= n_running_times; ++x){
+        cout << "\n################# "<< x << " #####################\n" << endl;
+        sprintf(file_name, "out/%d.txt", x);
+        cout << "Output File: " << file_name << endl;
+        // return 0;
 
-	cout << "\nSCCs in fifth graph \n"; 
-	Graph g5(5); 
-	g5.addEdge(0,1); 
-	g5.addEdge(1,2); 
-	g5.addEdge(2,3); 
-	g5.addEdge(2,4); 
-	g5.addEdge(3,0); 
-	g5.addEdge(4,2); 
-	g5.SCC(); 
+        ofstream FILE;
+        FILE.open(file_name);
+        FILE << "# Running Times: " << n_running_times << endl;
+        FILE << "# P   V   T(ms)   E" << endl;
+        
+        // Percorre todas as combinacoes de vertices
+        for (double edge_prob = 0.1; edge_prob <= edges_max_p; edge_prob = edge_prob + 0.1){
+            
+            cout << "\n==================================\n" << endl;
+            for (int i = 0; i < n_possible_vertices; ++i){
+                // Instancia grafo
+                Graph g(vertices[i]);
 
+                cout << "Edge Probability:   " << edge_prob << endl;
+                cout << "Vertices:           " << vertices[i] << endl;
+                cout << "Edges:              ";
+                
+                for(int v1 = 0; v1 < vertices[i]; ++v1){
+                    for (int v2 = 0; v2 < vertices[i]; ++v2){
+                        // Se o numero aleatorio for menor que edge_prob, cria aresta
+                        if(doubleRand() < edge_prob){
+                            // cout << v1 << " -> " << v2 << endl;
+                            g.addEdge(v1, v2);
+                            edges_counter++;
+                        }
+                    }
+                }
+                cout << edges_counter << endl;
+                cout << "Milliseconds:       ";
+                auto start = chrono::high_resolution_clock::now();
+                // Encontra e mostra os SCCs
+                g.SCC();
+                auto stop = chrono::high_resolution_clock::now();
+                auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+
+                cout << duration.count() << endl;
+                cout << "\n----------------------------------\n" << endl;
+
+                FILE << edge_prob << " " << vertices[i] << " " << duration.count() << " " << edges_counter << endl;
+                edges_counter = 0;
+            }
+        }
+        FILE.close();
+        flush(FILE);
+    }
 	return 0; 
 } 

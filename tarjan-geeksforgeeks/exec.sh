@@ -1,25 +1,29 @@
 echo -e "\n**GeeksforGeeks Tarjan Algorithm**\n"
+echo -e "    ~$ bash exec.sh <RUNNING_TIMES> <VERTICES_RANGE> <EDGES_MAX_PROB>\n"
 
-echo "Setting env variables..."
+echo -n "Setting env variables..."
 if [ -n "$1" ]; then
-  echo "VERTICES_RANGE: OK"
-  export VERTICES_RANGE="$1"
+  export RUNNING_TIMES="$1"
 else
-  echo "VERTICES_RANGE: ERROR"
-  exit 1
+  export RUNNING_TIMES="10"
 fi
 
 if [ -n "$2" ]; then
-  echo "EDGES_MAX_PROB: OK"
-  export EDGES_MAX_PROB="$2"
+  export VERTICES_RANGE="$2"
 else
-  echo "EDGES_MAX_PROB: ERROR"
-  exit 1
+  export VERTICES_RANGE="10"
 fi
+
+if [ -n "$3" ]; then
+  export EDGES_MAX_PROB="$3"
+else
+  export EDGES_MAX_PROB="1.0"
+fi
+echo " OK"
 
 echo -n "Compiling C++ code..."
 g++ -I /usr/local/boost_1_70_0/ -o main main.cpp
 echo " OK"
 
-echo "Running..."
-./main
+echo -e "Running...\n"
+time ./main
