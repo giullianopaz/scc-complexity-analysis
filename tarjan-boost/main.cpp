@@ -122,10 +122,27 @@ int main() {
     
     return EXIT_SUCCESS;
     
-    // Graph G(N);
+    // Graph G(11);
     // boost::add_edge(0, 1, G);
+    // boost::add_edge(0, 3, G); 
+    // boost::add_edge(0, 1, G); 
+    // boost::add_edge(1, 2, G); 
+    // boost::add_edge(1, 4, G); 
+    // boost::add_edge(2, 0, G); 
+    // boost::add_edge(2, 6, G); 
+    // boost::add_edge(3, 2, G); 
+    // boost::add_edge(4, 5, G); 
+    // boost::add_edge(4, 6, G); 
+    // boost::add_edge(5, 6, G); 
+    // boost::add_edge(5, 7, G); 
+    // boost::add_edge(5, 8, G); 
+    // boost::add_edge(5, 9, G); 
+    // boost::add_edge(6, 4, G); 
+    // boost::add_edge(7, 9, G); 
+    // boost::add_edge(8, 9, G); 
+    // boost::add_edge(9, 8, G); 
 
-    // vector<int> c(N);
+    // vector<int> c(11);
     // int num = boost::strong_components(
     //     G,
     //     boost::make_iterator_property_map(
@@ -137,5 +154,6 @@ int main() {
     // vector < int >::iterator i;
     // for (i = c.begin(); i != c.end(); ++i)
     //     cout << "Vertex " << i - c.begin() << " is in component " << *i << endl;
+    // return 0;
     
 }
