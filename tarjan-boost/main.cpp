@@ -122,6 +122,8 @@ int main() {
     
     return EXIT_SUCCESS;
     
+
+    // typedef boost::adjacency_list < boost::vecS, boost::vecS, boost::directedS > Graph;
     // Graph G(11);
     // boost::add_edge(0, 1, G);
     // boost::add_edge(0, 3, G); 
