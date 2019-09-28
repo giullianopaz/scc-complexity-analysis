@@ -17,12 +17,12 @@ class Graph
 
 	// A Recursive DFS based function used by SCC() 
 	void SCCUtil(int u, int disc[], int low[], 
-				stack<int> *st, bool stackMember[]); 
+				stack<int> *st, bool stackMember[], int *ptr_counter); 
 public: 
 	Graph(int V); // Constructor
 	~Graph(); // Desstructor 
 	void addEdge(int v, int w); // function to add an edge to graph 
-	void SCC(); // prints strongly connected components 
+	int SCC(); // prints strongly connected components 
 }; 
 
 Graph::Graph(int V) 
@@ -53,7 +53,7 @@ void Graph::addEdge(int v, int w)
 // stackMember[] --> bit/index array for faster check whether 
 //				 a node is in stack 
 void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st, 
-					bool stackMember[]) 
+					bool stackMember[], int *ptr_counter) 
 { 
 	// A static variable is used for simplicity, we can avoid use 
 	// of static variable by passing a pointer. 
@@ -73,7 +73,7 @@ void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
 		// If v is not visited yet, then recur for it 
 		if (disc[v] == -1) 
 		{ 
-			SCCUtil(v, disc, low, st, stackMember); 
+			SCCUtil(v, disc, low, st, stackMember, ptr_counter); 
 
 			// Check if the subtree rooted with 'v' has a 
 			// connection to one of the ancestors of 'u' 
@@ -100,19 +100,22 @@ void Graph::SCCUtil(int u, int disc[], int low[], stack<int> *st,
 			st->pop(); 
 		} 
 		w = (int) st->top(); 
-		// cout << w << "\n"; 
+		// cout << w << "\n";
+        ++*ptr_counter;
 		stackMember[w] = false; 
 		st->pop(); 
 	} 
 } 
 
 // The function to do DFS traversal. It uses SCCUtil() 
-void Graph::SCC() 
+int Graph::SCC() 
 { 
 	int *disc = new int[V]; 
 	int *low = new int[V]; 
 	bool *stackMember = new bool[V]; 
-	stack<int> *st = new stack<int>(); 
+	stack<int> *st = new stack<int>();
+
+    int counter = 0;
 
 	// Initialize disc and low, and stackMember arrays 
 	for (int i = 0; i < V; i++) 
@@ -126,7 +129,9 @@ void Graph::SCC()
 	// connected components in DFS tree with vertex 'i' 
 	for (int i = 0; i < V; i++) 
 		if (disc[i] == NIL) 
-			SCCUtil(i, disc, low, st, stackMember); 
+			SCCUtil(i, disc, low, st, stackMember, &counter);
+
+    return counter;
 }
 
 // Gera numeros aleatorios
@@ -137,107 +142,108 @@ double doubleRand() {
 // Driver program to test above function 
 int main() 
 { 
-	 // seed dos valores random
-    srand(static_cast<unsigned int>(clock()));
-    // Contador de arestas
-    long long edges_counter = 0;
+	// // seed dos valores random
+ //    srand(static_cast<unsigned int>(clock()));
+ //    // Contador de arestas
+ //    long long edges_counter = 0;
     
-    // Quantidade de possibilidades de vertices
-    int n_running_times = (int)atoi(getenv("RUNNING_TIMES"));
-    int n_possible_vertices = (int)atoi(getenv("VERTICES_RANGE"));
-    double edges_max_p = (double)atof(getenv("EDGES_MAX_PROB"));
+ //    // Quantidade de possibilidades de vertices
+ //    int n_running_times = (int)atoi(getenv("RUNNING_TIMES"));
+ //    int n_possible_vertices = (int)atoi(getenv("VERTICES_RANGE"));
+ //    double edges_max_p = (double)atof(getenv("EDGES_MAX_PROB"));
 
-    cout << "RUNNING_TIMES: " << n_running_times << endl;
-    cout << "VERTICES_RANGE: " << n_possible_vertices << endl;
-    cout << "EDGES_MAX_PROB: " << edges_max_p << endl;
+ //    cout << "RUNNING_TIMES: " << n_running_times << endl;
+ //    cout << "VERTICES_RANGE: " << n_possible_vertices << endl;
+ //    cout << "EDGES_MAX_PROB: " << edges_max_p << endl;
     
-    // Vetor com as possibilidades de valores de vertices -> 10e1...10e10
-    int vertices[n_possible_vertices];
-    for (int i = 0; i < n_possible_vertices; ++i) {
-        // vertices[i] = pow(10, i+1);
-        vertices[i] = 10 * (i+1)*100;
-    }
+ //    // Vetor com as possibilidades de valores de vertices -> 10e1...10e10
+ //    int vertices[n_possible_vertices];
+ //    for (int i = 0; i < n_possible_vertices; ++i) {
+ //        // vertices[i] = pow(10, i+1);
+ //        vertices[i] = 10 * (i+1)*100;
+ //    }
 
-    // for (int i = 0; i < n_possible_vertices; ++i){
-    //     cout << vertices[i] << endl;
-    // }
-    // return(0);
+ //    // for (int i = 0; i < n_possible_vertices; ++i){
+ //    //     cout << vertices[i] << endl;
+ //    // }
+ //    // return(0);
     
-    // Arquivo de escrita
-    char file_name[50];
+ //    // Arquivo de escrita
+ //    char file_name[50];
 
-    for (int x = 1; x <= n_running_times; ++x){
-        cout << "\n################# "<< x << " #####################\n" << endl;
-        sprintf(file_name, "out/%d.txt", x);
-        cout << "Output File: " << file_name << endl;
-        // return 0;
+ //    for (int x = 1; x <= n_running_times; ++x){
+ //        cout << "\n################# "<< x << " #####################\n" << endl;
+ //        sprintf(file_name, "out/%d.txt", x);
+ //        cout << "Output File: " << file_name << endl;
+ //        // return 0;
 
-        ofstream FILE;
-        FILE.open(file_name);
-        FILE << "# Running Times: " << n_running_times << endl;
-        FILE << "# P   V   T(ms)   E" << endl;
+ //        ofstream FILE;
+ //        FILE.open(file_name);
+ //        FILE << "# Running Times: " << n_running_times << endl;
+ //        FILE << "# P   V   T(ms)   E" << endl;
         
-        // Percorre todas as combinacoes de vertices
-        for (double edge_prob = 0.1; edge_prob <= edges_max_p; edge_prob = edge_prob + 0.1){
+ //        // Percorre todas as combinacoes de vertices
+ //        for (double edge_prob = 0.1; edge_prob <= edges_max_p; edge_prob = edge_prob + 0.1){
             
-            cout << "\n==================================\n" << endl;
-            for (int i = 0; i < n_possible_vertices; ++i){
-                // Instancia grafo
-                Graph g(vertices[i]);
+ //            cout << "\n==================================\n" << endl;
+ //            for (int i = 0; i < n_possible_vertices; ++i){
+ //                // Instancia grafo
+ //                Graph g(vertices[i]);
 
-                cout << "Edge Probability:   " << edge_prob << endl;
-                cout << "Vertices:           " << vertices[i] << endl;
-                cout << "Edges:              ";
+ //                cout << "Edge Probability:   " << edge_prob << endl;
+ //                cout << "Vertices:           " << vertices[i] << endl;
+ //                cout << "Edges:              ";
                 
-                for(int v1 = 0; v1 < vertices[i]; ++v1){
-                    for (int v2 = 0; v2 < vertices[i]; ++v2){
-                        // Se o numero aleatorio for menor que edge_prob, cria aresta
-                        if(doubleRand() < edge_prob){
-                            // cout << v1 << " -> " << v2 << endl;
-                            g.addEdge(v1, v2);
-                            edges_counter++;
-                        }
-                    }
-                }
-                cout << edges_counter << endl;
-                cout << "Milliseconds:       ";
-                auto start = chrono::high_resolution_clock::now();
-                // Encontra e mostra os SCCs
-                g.SCC();
-                auto stop = chrono::high_resolution_clock::now();
-                auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+ //                for(int v1 = 0; v1 < vertices[i]; ++v1){
+ //                    for (int v2 = 0; v2 < vertices[i]; ++v2){
+ //                        // Se o numero aleatorio for menor que edge_prob, cria aresta
+ //                        if(doubleRand() < edge_prob){
+ //                            // cout << v1 << " -> " << v2 << endl;
+ //                            g.addEdge(v1, v2);
+ //                            edges_counter++;
+ //                        }
+ //                    }
+ //                }
+ //                cout << edges_counter << endl;
+ //                cout << "Milliseconds:       ";
+ //                auto start = chrono::high_resolution_clock::now();
+ //                // Encontra e mostra os SCCs
+ //                g.SCC();
+ //                auto stop = chrono::high_resolution_clock::now();
+ //                auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
-                cout << duration.count() << endl;
-                cout << "\n----------------------------------\n" << endl;
+ //                cout << duration.count() << endl;
+ //                cout << "\n----------------------------------\n" << endl;
 
-                FILE << edge_prob << " " << vertices[i] << " " << duration.count() << " " << edges_counter << endl;
-                edges_counter = 0;
-            }
-        }
-        FILE.close();
-        flush(FILE);
-    }
-	return 0;
+ //                FILE << edge_prob << " " << vertices[i] << " " << duration.count() << " " << edges_counter << endl;
+ //                edges_counter = 0;
+ //            }
+ //        }
+ //        FILE.close();
+ //        flush(FILE);
+ //    }
+	// return 0;
 
-
-    // Graph G(11);
-    // G.addEdge(0, 1); 
-    // G.addEdge(0, 3); 
-    // G.addEdge(1, 2); 
-    // G.addEdge(1, 4); 
-    // G.addEdge(2, 0); 
-    // G.addEdge(2, 6); 
-    // G.addEdge(3, 2); 
-    // G.addEdge(4, 5); 
-    // G.addEdge(4, 6); 
-    // G.addEdge(5, 6); 
-    // G.addEdge(5, 7); 
-    // G.addEdge(5, 8); 
-    // G.addEdge(5, 9); 
-    // G.addEdge(6, 4); 
-    // G.addEdge(7, 9); 
-    // G.addEdge(8, 9); 
-    // G.addEdge(9, 8);
-    // G.SCC();
-    // return 0;
+    int num = 0;
+    Graph G(11);
+    G.addEdge(0, 1); 
+    G.addEdge(0, 3); 
+    G.addEdge(1, 2); 
+    G.addEdge(1, 4); 
+    G.addEdge(2, 0); 
+    G.addEdge(2, 6); 
+    G.addEdge(3, 2); 
+    G.addEdge(4, 5); 
+    G.addEdge(4, 6); 
+    G.addEdge(5, 6); 
+    G.addEdge(5, 7); 
+    G.addEdge(5, 8); 
+    G.addEdge(5, 9); 
+    G.addEdge(6, 4); 
+    G.addEdge(7, 9); 
+    G.addEdge(8, 9); 
+    G.addEdge(9, 8);
+    num = G.SCC();
+    cout << "\n[main] Counter: " << num << endl;
+    return 0;
 } 

@@ -108,7 +108,7 @@ int main() {
                 // ----------------------------------------------------
 
                 auto stop = chrono::high_resolution_clock::now();
-                auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+                auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
                 cout << duration.count() << endl;
                 cout << "\n----------------------------------\n" << endl;
