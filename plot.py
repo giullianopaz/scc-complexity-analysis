@@ -83,6 +83,7 @@ X_VALUES = sorted(set(X_VALUES))
 # Retira os valores repetidos e ordena
 LABELS = sorted(set([label for dict_labels in LIST for label in dict_labels.keys()]))
 LABELS.append(LABELS.pop(1))
+LABELS.reverse()
 # print("\n\nLABELS: ", LABELS)
 
 Y_VALUES = {}
