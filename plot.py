@@ -1,6 +1,8 @@
 import sys
 import matplotlib.pyplot as plt
 import argparse
+import numpy as np
+from scipy.optimize import curve_fit
 from os import walk
 from math import sqrt
 
@@ -108,61 +110,81 @@ for label in LABELS:
 # print("\n\nERROR['100%']: ", ERROR['100%'])
 
 
-for label in LABELS:
-    plt.errorbar(
-        X_VALUES,
-        Y_VALUES[label],
-        yerr=ERROR[label],
-        label=label,
-        # marker='o', markersize=3,
-        capsize=4,
-        # lolims=True, uplims=True
-    )
-
-# # Tarjan GeeksforGeeks 100%
-# plt.errorbar(
+# for label in LABELS:
+#     plt.errorbar(
 #         X_VALUES,
-#         [0.023999999999999997, 0.09739999999999999, 0.2153, 0.38280000000000003,
-#         0.5977, 0.8581, 1.1695, 1.5197999999999998, 1.9291999999999998, 2.3867000000000003],
-#         yerr=[3.657118196434064e-18, 0.004427188724235731, 0.00377270901784558, 0.008175845182269817,
-#         0.012092697520955927, 0.014433371824429058, 0.03113144176980352, 0.017008494609720464, 0.03869194575963674, 0.06583489449625725],
-#         label='Tarjan GeeksforGeeks 100%',
-#         # marker='o',
-#         markersize=5,
-#         capsize=4,
-#         linewidth=2.0,
-#         # lolims=True, uplims=True
-#     )
-
-# # Kosaraju GeeksforGeeks 100%
-# plt.errorbar(
-#         X_VALUES,
-#         [0.20220000000000002, 1.0119, 2.5759, 5.3018,
-#         9.5304, 14.3732, 19.5928, 30.7532, 37.8492, 52.6476],
-#         yerr=[0.0013984117975601932, 0.07434820479040198, 0.01615515053748772, 0.14612232318620375,
-#         0.1051107352589004, 0.22480697893476892, 0.10046867947552376, 0.7652946854353273, 0.6470404074622308, 0.7079148096895409],
-#         label='Kosaraju GeeksforGeeks 100%',
-#         # marker='o',
-#         markersize=5,
-#         capsize=4,
-#         linewidth=2.0,
-#         # lolims=True, uplims=True
-#     )
-
-# # Tarjan Boost 100%
-# plt.errorbar(
-#         X_VALUES,
-#         [0.5691999999999999, 2.0233, 4.5462, 8.073599999999999, 12.610400000000002, 18.152700000000003,
-#         24.6971, 32.2504, 40.803200000000004, 50.3586],
-#         yerr=[0.0014757295747452452, 0.0014944341180973568, 0.0024404006956965604, 0.0036270588023296184,
-#         0.004926120853842891, 0.008393780766469992, 0.013186272323055742, 0.02283369829392078, 0.024521192648176367, 0.025863745539525283],
-#         label='Tarjan Boost 100%',
+#         Y_VALUES[label],
+#         yerr=ERROR[label],
+#         label=label,
 #         # marker='o', markersize=3,
 #         capsize=4,
 #         # lolims=True, uplims=True
 #     )
 
-# plt.plot(X_VALUES, [x/1000 for x in X_VALUES], label='X/1000')
+# Tarjan GeeksforGeeks 100%
+Y_TARJAN_GFG = [0.023999999999999997, 0.09739999999999999, 0.2153, 0.38280000000000003,
+        0.5977, 0.8581, 1.1695, 1.5197999999999998, 1.9291999999999998, 2.3867000000000003]
+plt.errorbar(
+        X_VALUES,
+        Y_TARJAN_GFG,
+        fmt='o',
+        yerr=[3.657118196434064e-18, 0.004427188724235731, 0.00377270901784558, 0.008175845182269817,
+        0.012092697520955927, 0.014433371824429058, 0.03113144176980352, 0.017008494609720464, 0.03869194575963674, 0.06583489449625725],
+        label='Tarjan GeeksforGeeks 100%',
+        # marker='o',
+        markersize=5,
+        capsize=4,
+        linewidth=2.0,
+        # lolims=True, uplims=True
+    )
+
+# Kosaraju GeeksforGeeks 100%
+Y_KOSARAJU_GFG = [0.20220000000000002, 1.0119, 2.5759, 5.3018, 9.5304, 14.3732, 19.5928, 30.7532, 37.8492, 52.6476]
+plt.errorbar(
+        X_VALUES,
+        Y_KOSARAJU_GFG,
+        fmt='o',
+        yerr=[0.0013984117975601932, 0.07434820479040198, 0.01615515053748772, 0.14612232318620375,
+        0.1051107352589004, 0.22480697893476892, 0.10046867947552376, 0.7652946854353273, 0.6470404074622308, 0.7079148096895409],
+        label='Kosaraju GeeksforGeeks 100%',
+        # marker='o',
+        markersize=5,
+        capsize=4,
+        linewidth=2.0,
+        # lolims=True, uplims=True
+    )
+
+# Tarjan Boost 100%
+Y_TARJAN_BOOST = [0.5691999999999999, 2.0233, 4.5462, 8.073599999999999, 12.610400000000002, 18.152700000000003,
+        24.6971, 32.2504, 40.803200000000004, 50.3586]
+plt.errorbar(
+        X_VALUES,
+        Y_TARJAN_BOOST,
+        fmt='o',
+        yerr=[0.0014757295747452452, 0.0014944341180973568, 0.0024404006956965604, 0.0036270588023296184,
+        0.004926120853842891, 0.008393780766469992, 0.013186272323055742, 0.02283369829392078, 0.024521192648176367, 0.025863745539525283],
+        label='Tarjan Boost 100%',
+        # marker='o', markersize=3,
+        capsize=4,
+        # lolims=True, uplims=True
+    )
+
+def func_q(x, a, b, c):
+    return a*x**2 + b*x + c 
+
+def func_l(x, a, b):
+    return a*x + b 
+
+# realiza aproximacao
+X = range(1000, 11000)
+parametros_l, pcov = curve_fit(func_l, xdata=X_VALUES, ydata=Y_TARJAN_GFG)
+aproximados_l = [func_l(x, *parametros_l) for x in X]
+plt.plot(X, aproximados_l, label="linear")
+print(pcov)
+
+parametros_q, pcov = curve_fit(func_q, xdata=X_VALUES, ydata=Y_KOSARAJU_GFG)
+aproximados_q = [func_q(x, *parametros_q) for x in X]
+plt.plot(X, aproximados_q, label="quadratico")
 
 # TODO: MUDAR NOME DO GRÁFICO
 plt.title(TITLE)
