@@ -43,6 +43,17 @@ def get_avg(array):
     return sum(array)/len(array)
 
 
+# Função Quadrática
+def func_q(x, a, b, c):
+    return a*x**2 + b*x + c 
+
+
+# Função Linear
+def func_l(x, a, b):
+    return a*x + b 
+
+
+
 FILE_LIST = make_file_list(PATH)
 RANGE = len(FILE_LIST)
 for file_name in FILE_LIST:
@@ -109,17 +120,35 @@ for label in LABELS:
 # print("\n\nY_VALUES['100%']: ", Y_VALUES['100%'])
 # print("\n\nERROR['100%']: ", ERROR['100%'])
 
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'b', 'g', 'r', 'c', 'm', 'y']
+
 
 # for label in LABELS:
+#     if int(label[0]) % 2 == 0:
+#         print("conitnue")
+#         continue
+
+#     color = colors.pop()
 #     plt.errorbar(
 #         X_VALUES,
 #         Y_VALUES[label],
 #         yerr=ERROR[label],
 #         label=label,
+#         fmt='o',
+#         color=color,
 #         # marker='o', markersize=3,
 #         capsize=4,
 #         # lolims=True, uplims=True
 #     )
+
+#     X = range(1000, 11000)
+#     # parametros_l, pcov = curve_fit(func_l, xdata=X_VALUES, ydata=Y_VALUES[label])
+#     # aproximados_l = [func_l(x, *parametros_l) for x in X]
+#     # plt.plot(X, aproximados_l, label="x", color=color)
+
+#     parametros_q, pcov = curve_fit(func_q, xdata=X_VALUES, ydata=Y_VALUES[label])
+#     aproximados_q = [func_q(x, *parametros_q) for x in X]
+#     plt.plot(X, aproximados_q, label=f"Ajuste de Curva de {label} sobre x²", color=color)
 
 # Tarjan GeeksforGeeks 100%
 Y_TARJAN_GFG = [0.023999999999999997, 0.09739999999999999, 0.2153, 0.38280000000000003,
@@ -169,22 +198,20 @@ plt.errorbar(
         # lolims=True, uplims=True
     )
 
-def func_q(x, a, b, c):
-    return a*x**2 + b*x + c 
-
-def func_l(x, a, b):
-    return a*x + b 
-
 # realiza aproximacao
 X = range(1000, 11000)
-parametros_l, pcov = curve_fit(func_l, xdata=X_VALUES, ydata=Y_TARJAN_GFG)
-aproximados_l = [func_l(x, *parametros_l) for x in X]
-plt.plot(X, aproximados_l, label="linear")
-print(pcov)
+# parametros_l, pcov = curve_fit(func_l, xdata=X_VALUES, ydata=Y_TARJAN_GFG)
+# aproximados_l = [func_l(x, *parametros_l) for x in X]
+# plt.plot(X, aproximados_l, label="x")
+# print(pcov)
+
+parametros_q, pcov = curve_fit(func_q, xdata=X_VALUES, ydata=Y_TARJAN_GFG)
+aproximados_q = [func_q(x, *parametros_q) for x in X]
+plt.plot(X, aproximados_q, label=f"Ajuste de Curva de Tarjan GeeksforGeeks 100% sobre x²")
 
 parametros_q, pcov = curve_fit(func_q, xdata=X_VALUES, ydata=Y_KOSARAJU_GFG)
 aproximados_q = [func_q(x, *parametros_q) for x in X]
-plt.plot(X, aproximados_q, label="quadratico")
+plt.plot(X, aproximados_q, label=f"Ajuste de Curva de Tarjan Boost e Kosaraju 100% sobre x²")
 
 # TODO: MUDAR NOME DO GRÁFICO
 plt.title(TITLE)

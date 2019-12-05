@@ -162,12 +162,13 @@ int main()
     
     // Vetor com as possibilidades de valores de vertices -> 10e1...10e10
     int vertices[n_possible_vertices];
-    for (int i = 0; i < n_possible_vertices; ++i) {
+    for (int i = 0; i <= n_possible_vertices; ++i) {
         // vertices[i] = pow(10, i+1);
-        vertices[i] = 10 * (i+1)*10;
+        vertices[i] = 10 * (i+1);
+        // vertices[i] = 10 * (i+1)*10;
     }
 
-    // for (int i = 0; i < n_possible_vertices; ++i){
+    // for (int i = 0; i < 10; ++i){
     //     cout << vertices[i] << endl;
     // }
     // return(0);
@@ -214,9 +215,11 @@ int main()
 
                 if (num_k == num_b){
                     cout << "Boost = Kosaraju" << endl;
+                    cout << num_b << " = " << num_k << endl;
                 }
                 else{
                     cout << "Boost != Kosaraju" << endl;
+                    cout << num_b << " != " << num_k << endl;
                     exit(1);
                 }
 
@@ -229,5 +232,6 @@ int main()
         // FILE.close();
         // flush(FILE);
     }
+    cout << "Every is OK!" << endl;
 	return 0;
 } 
